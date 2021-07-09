@@ -5,6 +5,12 @@ const handlebars = require('express-handlebars')
 const app = express()
 const port = 3000
 
+// middleware
+app.use(express.urlencoded({
+  extended: true
+}))
+app.use(express.json())
+
 // logger
 app.use(morgan('combined'))
 
@@ -18,18 +24,10 @@ app.set('views', path.join(__dirname, 'resources/views'));
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.render('home')
-})
+// routes init
+const route = require('./routes');
 
-app.get('/news', (req, res) => {
-  res.render('news')
-})
-
-app.get('/search', (req, res) => {
-  console.log(req.query.q)
-  res.render('search')
-})
+route(app);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
